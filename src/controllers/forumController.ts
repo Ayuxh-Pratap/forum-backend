@@ -56,6 +56,13 @@ export const createPost = async (req: AuthRequest, res: Response) => {
   try {
     const { title, content } = req.body;
     
+    console.log('Create post request:', {
+      body: req.body,
+      user: req.user,
+      title,
+      content
+    });
+    
     if (!title || !content) {
       return res.status(400).json({ success: false, message: 'Title and content are required' });
     }
@@ -70,6 +77,14 @@ export const createPost = async (req: AuthRequest, res: Response) => {
     const authorName = req.body.authorName || 'Anonymous';
     const authorImage = req.body.authorImage || null;
     
+    console.log('Creating post with params:', {
+      title,
+      content: content.substring(0, 50) + '...',
+      authorId,
+      authorName,
+      authorImage
+    });
+    
     const post = await forumService.createPost(
       title,
       content,
@@ -77,6 +92,8 @@ export const createPost = async (req: AuthRequest, res: Response) => {
       authorName,
       authorImage
     );
+    
+    console.log('Post created successfully:', post.id);
     
     // Send email notifications to subscribers
     // This is just a placeholder - in a real app you'd have a subscribers table
